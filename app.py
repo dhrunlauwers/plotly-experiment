@@ -132,7 +132,7 @@ def plot_expected_return(assets):
     fig.layout.paper_bgcolor = '#E5ECF6'
     fig.layout.plot_bgcolor = '#E5ECF6'
     fig.update_traces(hovertemplate='Expected Return: %{y:.1%} <br> Standard Deviation of Return: %{x:.3g}')
-    fig.update_layout(title={'text':'Efficient Frontier', 'y':0.95, 'x':0.085, 'xanchor':'center', 'yanchor':'top'},
+    fig.update_layout(title={'text':'Efficient Frontier', 'y':0.95, 'x':0},
                         title_font_size=24, height=750)
 
     return fig
@@ -155,7 +155,7 @@ def plot_allocation(assets):
     fig.layout.yaxis.fixedrange = True
     fig.layout.template = 'simple_white'
     fig.update_layout(legend_title_text='Assets',title_font_size=24,
-                        title={'text':'Ideal Allocation', 'y':0.99, 'x':0.085, 'xanchor':'center', 'yanchor':'top'},
+                        title={'text':'Ideal Allocation', 'y':0.99, 'x':0},
                         height=750)
     fig.update_traces(hovertemplate='Expected Return: %{y:.1%} <br> Allocation: %{x:.1%}')
     fig.layout.paper_bgcolor = '#E5ECF6'
