@@ -32,7 +32,7 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col(width=2),
             dbc.Col(
-                html.H1('Portfolio Optimization Demo', style={'textAlign':'center', 'color':'white'}), width=8
+                html.H1('Portfolio Optimization Demo', style={'color':'white'}), width=8
             ),
             dbc.Col([
                 html.A(html.Img(src="https://github.com/dhrunlauwers/plotly-experiment/raw/dev/images/linkedin.png", height='30px'),
@@ -41,7 +41,7 @@ app.layout = html.Div([
             ),
             dbc.Col([
                 html.A(html.Img(src="https://github.com/dhrunlauwers/plotly-experiment/raw/dev/images/GitHub-Mark-Light-32px.png", height="30px"),
-                href='')
+                href='https://github.com/dhrunlauwers/plotly-experiment')
                 ], width=1, 
             )
         ], style={'backgroundColor': '#013752'}, align='center'),
@@ -51,7 +51,7 @@ app.layout = html.Div([
             dbc.Col(lg=2),
             dbc.Col([
                 dcc.Markdown("""
-                                #### Introduction
+                                ### Introduction
                                 Under **[modern portfolio theory](https://en.wikipedia.org/wiki/Modern_portfolio_theory)**, a portfolio is considered **efficient** if it maximizes the expected return for a given level of risk (measured as the variance of expected return). 
                                 
                                 #### What does the app do?
@@ -72,17 +72,30 @@ app.layout = html.Div([
                                 - Covariance matrix calculated based on weekly returns data.
                                 - Expected returns calculated by annualizing weekly returns.
                                 """),
+            ]),
+            dbc.Col(lg=2)
+        ]),
+        dbc.Row([
+            dbc.Col(lg=2),
+            dbc.Col([
                 html.Br(),
+                    dcc.Markdown("""
+                                ### Demo
+                                #### Select the assets you want to include in your portfolio
+                                """),
+                    dcc.Dropdown(
+                        options=[{'label':col, 'value':col} for col in C.columns.sort_values()],
+                        value=['AAPL','F','BAC', 'XOM'],
+                        id='assets',
+                        multi=True),
+                    html.Div(id='warning', style={'color':'red'}),
                 html.Br(),
-                html.H5('Select the assets you want to include in your portfolio', style={'textAlign':'center'}),
-                dcc.Dropdown(
-                    options=[{'label':col, 'value':col} for col in C.columns.sort_values()],
-                    value=['AAPL','F','BAC', 'XOM'],
-                    id='assets',
-                    multi=True),
-                html.Div(id='warning', style={'color':'red', 'textAlign':'center'}),
-                html.Br(),
-                html.Br(),
+                ]),
+            dbc.Col(lg=6)
+        ]),
+        dbc.Row([
+            dbc.Col(lg=2),
+            dbc.Col([
                 dcc.Graph(id='expected_return_chart', config={'displayModeBar':False}),
                 html.Br(),
                 html.Br(),
@@ -119,8 +132,8 @@ def plot_expected_return(assets):
     fig.layout.paper_bgcolor = '#E5ECF6'
     fig.layout.plot_bgcolor = '#E5ECF6'
     fig.update_traces(hovertemplate='Expected Return: %{y:.1%} <br> Standard Deviation of Return: %{x:.3g}')
-    fig.update_layout(title={'text':'Efficient Frontier', 'y':0.9, 'x':0.5, 'xanchor':'center', 'yanchor':'top'},
-                        title_font_size=20, height=750)
+    fig.update_layout(title={'text':'Efficient Frontier', 'y':0.95, 'x':0.085, 'xanchor':'center', 'yanchor':'top'},
+                        title_font_size=24, height=750)
 
     return fig
 
@@ -141,9 +154,8 @@ def plot_allocation(assets):
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
     fig.layout.template = 'simple_white'
-    fig.layout.title.x = 0.5
-    fig.update_layout(legend_title_text='Assets',title_font_size=20,
-                        title={'text':'Ideal Allocation', 'y':1, 'x':0.5, 'xanchor':'center', 'yanchor':'top'},
+    fig.update_layout(legend_title_text='Assets',title_font_size=24,
+                        title={'text':'Ideal Allocation', 'y':0.99, 'x':0.085, 'xanchor':'center', 'yanchor':'top'},
                         height=750)
     fig.update_traces(hovertemplate='Expected Return: %{y:.1%} <br> Allocation: %{x:.1%}')
     fig.layout.paper_bgcolor = '#E5ECF6'
