@@ -27,85 +27,70 @@ results = optimize_portfolio(returns_vector, r, C, ['AAPL', 'F', 'BAC', 'XOM'])
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 
 app.layout = html.Div([
-    html.H1('Portfolio Optimization Demo', style={'textAlign':'center'}),
-    html.Br(),
-    dbc.Row([
-        dbc.Col(lg=2),
-        dbc.Col([
-            dcc.Markdown("""
-                            Under modern portfolio theory, a portfolio is considered **efficient** if it maximizes the expected return for a given level of risk (measured as the variance of expected return). 
-                            
-                            Based on the assets selected below, this app calculates a set of portfolios (also known as the **efficient frontier**) that satisfies this condition across a range of expected return values. The underlying algorithm uses a **Lagrange multiplier** to determine the minimum variance asset allocation under multiple constraints. 
-                            
-                            The links at the bottom of this page include references, a simple example, as well as code for both the algorithm and this dashboard. Please reach out if you have any feedback!
-                            """),
-            html.Br(),
-            html.Br(),
-            html.H5('Select the assets you want to include in your portfolio', style={'textAlign':'center'}),
-            dcc.Dropdown(
-                options=[{'label':col, 'value':col} for col in C.columns.sort_values()],
-                value=['AAPL','F','BAC', 'XOM'],
-                id='assets',
-                multi=True),
-            html.Div(id='warning', style={'color':'red', 'textAlign':'center'}),
-            html.Br(),
-            html.Br(),
-            dcc.Graph(id='expected_return_chart'),
-            html.Br(),
-            html.Br(),
-            html.Br(),
-            dcc.Graph(id='allocation_chart')
-        ],lg=8)
-    ]), 
-    html.Br(),
-    html.Br(),
-    html.Br(),
-    html.Br(),
 
-    dbc.Tabs([
-        dbc.Tab([
-            html.Br(),
-            html.Ul([
-                html.Li(['Github repo: ',
-                     html.A('https://github.com/dhrunlauwers/plotly-experiment',
-                            href='https://github.com/dhrunlauwers/plotly-experiment')
-                ]),
-                html.Li(['A simpler example: ',
-                     html.A('https://github.com/dhrunlauwers/markowitz-portfolio-optimization',
-                            href='https://github.com/dhrunlauwers/markowitz-portfolio-optimization')
-                ]),
-                html.Li(['Contact: ',
-                     html.A('https://www.linkedin.com/in/dhrunlauwers/',
-                            href='https://www.linkedin.com/in/dhrunlauwers/')
-                ]),
-            ])
-        ], label='Project Info'),
-        dbc.Tab([
-            html.Br(),
-            html.Ul(
-                    [html.Li('Number of available assets: 20'),
-                    html.Li('Time period for underlying data: 2005-present'),
-                    html.Li('Both expected return values and covariance matrix are based on annualized weekly returns')]
+    dbc.Container([
+        dbc.Row([
+            dbc.Col(width=2),
+            dbc.Col(
+                html.H1('Portfolio Optimization Demo', style={'textAlign':'center', 'color':'white'}), width=8
+            ),
+            dbc.Col([
+                html.A(html.Img(src="https://github.com/dhrunlauwers/plotly-experiment/raw/dev/images/linkedin.png", height='30px'),
+                href="https://www.linkedin.com/in/dhrunlauwers/"),
+                ], width=1, align='right'
+            ),
+            dbc.Col([
+                html.A(html.Img(src="https://github.com/dhrunlauwers/plotly-experiment/raw/dev/images/GitHub-Mark-Light-32px.png", height="30px"),
+                href='')
+                ], width=1, 
             )
-        ], label='Key Facts'),
-        dbc.Tab([
-            html.Br(),
-            html.Ul([
-                   html.Li(['Modern portfolio theory: ',
-                     html.A('https://en.wikipedia.org/wiki/Modern_portfolio_theory',
-                            href='https://en.wikipedia.org/wiki/Modern_portfolio_theory')
-                ]),
-                html.Li(['The efficient frontier: ',
-                     html.A('https://en.wikipedia.org/wiki/Efficient_frontier',
-                            href='https://en.wikipedia.org/wiki/Efficient_frontier')
-                ]),
-                html.Li(['Lagrange multiplier: ',
-                     html.A('https://en.wikipedia.org/wiki/Lagrange_multiplier',
-                            href='https://en.wikipedia.org/wiki/Lagrange_multiplier')
-                ])]
-            )
-        ], label='References')
-    ])
+        ], style={'backgroundColor': '#013752'}, align='center'),
+
+        html.Br(),
+        dbc.Row([
+            dbc.Col(lg=2),
+            dbc.Col([
+                dcc.Markdown("""
+                                #### Introduction
+                                Under **[modern portfolio theory](https://en.wikipedia.org/wiki/Modern_portfolio_theory)**, a portfolio is considered **efficient** if it maximizes the expected return for a given level of risk (measured as the variance of expected return). 
+                                
+                                #### What does the app do?
+                                Based on the assets selected below, the tool below calculates a set of portfolios (also known as **[the efficient frontier](https://en.wikipedia.org/wiki/Efficient_frontier)**) that satisfies the above condition across a range of expected return values. 
+                                
+                                #### How does it work?
+                                The underlying algorithm uses a **[Lagrange multiplier](https://en.wikipedia.org/wiki/Lagrange_multiplier)** to determine the minimum variance asset allocation under multiple constraints.
+                                - Expected return must meet the target value.
+                                - Portfolio weights must add up to 100%.
+                                
+                                #### What data was used?
+                                Split-adjusted price [data](https://github.com/dhrunlauwers/plotly-experiment/blob/main/data/finances.csv) for different organizations was gathered using Yahoo Finance API.
+                                - Number of available assets: 20
+                                - Time period covered: 2005 - 2021
+                                - Frequency of observations: Weekly 
+
+                                #### How was it processed?
+                                - Covariance matrix calculated based on weekly returns data.
+                                - Expected returns calculated by annualizing weekly returns.
+                                """),
+                html.Br(),
+                html.Br(),
+                html.H5('Select the assets you want to include in your portfolio', style={'textAlign':'center'}),
+                dcc.Dropdown(
+                    options=[{'label':col, 'value':col} for col in C.columns.sort_values()],
+                    value=['AAPL','F','BAC', 'XOM'],
+                    id='assets',
+                    multi=True),
+                html.Div(id='warning', style={'color':'red', 'textAlign':'center'}),
+                html.Br(),
+                html.Br(),
+                dcc.Graph(id='expected_return_chart', config={'displayModeBar':False}),
+                html.Br(),
+                html.Br(),
+                html.Br(),
+                dcc.Graph(id='allocation_chart', config={'displayModeBar':False})
+            ],lg=8)
+        ]), 
+    ], fluid=True)
 ], style={'backgroundColor': '#E5ECF6'})
 
 @app.callback(Output('warning', 'children'),
@@ -122,13 +107,15 @@ def check_selection(assets):
 def plot_expected_return(assets):
     results = optimize_portfolio(returns_vector, r, C, assets)
     fig = go.Figure()
-    fig.add_scatter(x=results['std_dev'],y=results['mu'])
+    fig.add_scatter(x=results['std_dev'],y=results['mu'], name='Efficient Frontier')
     fig.layout.template = 'simple_white'
     fig.layout.title = 'Efficient Frontier'
     fig.layout.xaxis.title = 'Risk (Standard Deviation)'
+    fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.title = 'Reward (Expected Return)'
     fig.layout.yaxis.tickformat = '%'
     fig.layout.yaxis.rangemode = 'tozero'
+    fig.layout.yaxis.fixedrange = True
     fig.layout.paper_bgcolor = '#E5ECF6'
     fig.layout.plot_bgcolor = '#E5ECF6'
     fig.update_traces(hovertemplate='Expected Return: %{y:.1%} <br> Standard Deviation of Return: %{x:.3g}')
@@ -151,6 +138,8 @@ def plot_allocation(assets):
     fig.layout.yaxis.title = 'Expected Return'
     fig.layout.xaxis.tickformat = '%'
     fig.layout.yaxis.tickformat = '%'
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
     fig.layout.template = 'simple_white'
     fig.layout.title.x = 0.5
     fig.update_layout(legend_title_text='Assets',title_font_size=20,
